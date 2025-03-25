@@ -13,7 +13,7 @@ def create(
         None, "--path", "-p", help="Path where sketchbook should be created"
     ),
     template: bool = typer.Option(
-        False, "--template", "-t", help="Create sketchbook with template files"
+        True, "--template", "-t", help="Create sketchbook with template files (default: True)"
     )
 ):
     """
@@ -35,7 +35,6 @@ def create(
         if template:
             # Create subdirectories
             (sketchbook_path / "sketches").mkdir()
-            (sketchbook_path / "main.py").touch()
             (sketchbook_path / "README.md").touch()
             
             # Create a README file
@@ -45,16 +44,46 @@ def create(
                 f.write(f"Created on: {datetime.now().strftime('%Y-%m-%d')}\n\n")
                 f.write("## Structure\n\n")
                 f.write("- **sketches/**: Store your sketch files here\n")
-                f.write("- **main.py**: This works as the entry point for sketchbook\n")
-               
+                f.write("- **main.py**: Main script to run sketches\n")             
+            # Create main.py file
+            main_py_path = sketchbook_path / "main.py"
+            with open(main_py_path, "w") as f:
+                data = '''import os
+
+SKETCH_DIR = "sketches"
+
+def list_sketches():
+    """List available sketches."""
+    return [f for f in os.listdir(SKETCH_DIR) if f.endswith(".py")]
+
+if __name__ == "__main__":
+    sketches = list_sketches()
+    
+    if not sketches:
+        print("⚠️ No sketches found! Add some in the 'sketches/' folder.")
+    else:
+        print("🎨 Available Sketches:")
+        for idx, sketch in enumerate(sketches, 1):
+            print(f"{idx}. {sketch}")
+        
+        choice = input("Enter the sketch number to run: ")
+        
+        try:
+            sketch_file = sketches[int(choice) - 1]
+            sketch_path = os.path.join(SKETCH_DIR, sketch_file)
+            exec(open(sketch_path).read())  # Runs selected sketch
+        except (IndexError, ValueError):
+            print("Invalid choice. Exiting.")
+'''
+                f.write(data)
             
-            typer.echo(f" Created template with main.py and README")
+            typer.echo(f"Created template structure with directories, README, and main.py")
     
     except FileExistsError:
-        typer.echo(f" Error: Sketchbook '{name}' already exists at {path}", err=True)
+        typer.echo(f"Error: Sketchbook '{name}' already exists at {path}", err=True)
         raise typer.Exit(code=1)
     except Exception as e:
-        typer.echo(f" Error creating sketchbook: {str(e)}", err=True)
+        typer.echo(f"Error creating sketchbook: {str(e)}", err=True)
         raise typer.Exit(code=1)
 
 @app.command()
@@ -83,7 +112,7 @@ def list(
             typer.echo(f"{idx}. {sketchbook.name}")
     
     except Exception as e:
-        typer.echo(f" Error listing sketchbooks: {str(e)}", err=True)
+        typer.echo(f"Error listing sketchbooks: {str(e)}", err=True)
         raise typer.Exit(code=1)
 
 if __name__ == "__main__":
