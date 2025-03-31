@@ -37,6 +37,7 @@ def create(
             (sketchbook_path / "sketches").mkdir()
             (sketchbook_path / "README.md").touch()
             
+            
             # Create a README file
             readme_path = sketchbook_path / "README.md"
             with open(readme_path, "w") as f:
@@ -62,7 +63,7 @@ if __name__ == "__main__":
     if not sketches:
         print("⚠️ No sketches found! Add some in the 'sketches/' folder.")
     else:
-        print("🎨 Available Sketches:")
+        print("Available Sketches:")
         for idx, sketch in enumerate(sketches, 1):
             print(f"{idx}. {sketch}")
         
@@ -77,7 +78,27 @@ if __name__ == "__main__":
 '''
                 f.write(data)
             
-            typer.echo(f"Created template structure with directories, README, and main.py")
+            # Create pyproject.toml file
+            pyproject_path = sketchbook_path / "pyproject.toml"
+            with open(pyproject_path, "w") as f:
+                f.write("""[tool.poetry]
+name = "tolvera"
+version = "0.1.0"
+description = "A creative coding environment inspired by Arduino and Processing."
+authors = ["Ayush Goyal <your-email@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = "^2.5.2"
+numpy = "^1.26.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+""")
+            
+            typer.echo(f"Created template structure with directories, README, main.py, and pyproject.toml")
     
     except FileExistsError:
         typer.echo(f"Error: Sketchbook '{name}' already exists at {path}", err=True)

@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "tolvera"
+version = "0.1.0"
+description = "A creative coding environment inspired by Arduino and Processing."
+authors = ["Ayush Goyal <your-email@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pygame = "^2.5.2"
+numpy = "^1.26.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

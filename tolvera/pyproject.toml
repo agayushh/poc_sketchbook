@@ -1,20 +1,18 @@
 [project]
-name = "poc-sketchbook"
+name = "sketchbook-cli"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "agayushh",email = "agayush088@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 dependencies = [
+    "tolvera (>=0.1.0rc15.post1,<0.2.0)",
+    "typer (>=0.15.2,<0.16.0)"
 ]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-black = "^25.1.0"
-
